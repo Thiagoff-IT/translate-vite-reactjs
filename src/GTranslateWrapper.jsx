@@ -1,38 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-const GoogleTranslate = () => {
+const GTranslateWrapper = () => {
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.gtranslate.net/widgets/latest/lc.js";
+    console.log('GTranslateWrapper montado');
+    if (window.gtranslateSettings) {
+      console.log('As configurações de tradução já existem');
+      return;
+    }
+    console.log('As configurações de tradução não existem, criando');
+    window.gtranslateSettings = {
+      "languages": ["en", "es", "pt", "ar"],
+      "alt_flags": {
+        "en": "usa",
+        "pt": "brazil"
+      }
+    };
+    
+    const script = document.createElement('script');
+    script.src = 'https://cdn.gtranslate.net/widgets/latest/flags.js';
     script.defer = true;
     document.body.appendChild(script);
-
-    window.gtranslateSettings = {
-      default_language: "pt",
-      native_language_names: true,
-      detect_browser_language: true,
-      languages: ["pt", "ar", "es", "en"],
-      wrapper_selector: ".gtranslate_wrapper",
-      gt_show_selected_languages: false,
-      gt_custom_links: "#",
-      gt_set_selected_languages: { from: "en", to: "pt" },
-    };
-
-    script.onload = function () {
-      window.gTranslate.init();
+    
+    return () => {
+      console.log('GTranslateWrapper desmontado');
     };
   }, []);
 
   return (
-    <button
-      type="button"
-      className="google-translate-button"
-      aria-label="Translate"
-      title="Translate"
-    >
-      <div className="gtranslate_wrapper"></div>
-    </button>
+    <div className="gtranslate_wrapper"></div>
   );
 };
 
-export default GoogleTranslate;
+export default GTranslateWrapper;
